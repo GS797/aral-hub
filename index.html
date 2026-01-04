@@ -2,55 +2,102 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>ARAL-HUB</title>
+    <title>Aral Hub - Restoration Map</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
-    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/leaflet-timedimension@1.1.1/dist/leaflet.timedimension.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-timedimension@1.1.1/dist/leaflet.timedimension.control.css"/>
     <style>
-        html, body, #map {width: 100%; height: 100%; margin: 0;}
-        .summary-box {
-            position: fixed; top: 10px; right: 10px; width: 280px;
-            background: rgba(255,255,255,0.9); padding: 15px;
-            border: 2px solid #005b96; border-radius: 8px; z-index: 1000;
-            font-family: Arial, sans-serif; font-size: 13px;
+        html, body, #map { width: 100%; height: 100%; margin: 0; }
+        .info-panel {
+            position: fixed; top: 10px; left: 50px; 
+            background: white; padding: 10px; border: 2px solid #005b96;
+            z-index: 1000; border-radius: 5px; font-family: sans-serif;
         }
     </style>
 </head>
 <body>
-    <div class="summary-box">
-        <b style="color:#005b96;">Aral Hub Summary</b><br><br>
-        Интеллектуальная платформа мониторинга Аральского моря. 
-        Система объединяет данные NASA и авторский прогноз до 2030 года.
-    </div>
-    <div id="map"></div>
 
-    <script>
-        var map = L.map("map", {center: [45.0, 60.0], zoom: 6});
-        L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
-        map.timeDimension = L.timeDimension({period: "P70Y", updateTimeDimension: true});
-        map.addControl(new L.Control.TimeDimension({position: "bottomleft"}));
+<div class="info-panel">
+    <b>Aral Hub: Система мониторинга</b><br>
+    <small>Используйте ползунок внизу для смены лет</small>
+</div>
 
-        var data = {
-            "type": "FeatureCollection",
-            "features": [
-                {
-                    "type": "Feature",
-                    "properties": {"time": "1960-01-01", "popup": "<b>1960: Данные NASA</b>", "style": {"color": "blue"}},
-                    "geometry": {"type": "Polygon", "coordinates": [[[58,43], [62,43], [62,47], [58,47], [58,43]]]}
+<div id="map"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/iso8601-jsperiod@0.2.1/iso8601.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/leaflet-timedimension@1.1.1/dist/leaflet.timedimension.min.js"></script>
+
+<script>
+    // Инициализация карты
+    var map = L.map("map", {
+        center: [45.5, 60.5],
+        zoom: 6,
+        timeDimension: true,
+        timeDimensionOptions: {
+            period: "P10Y", // Шаг в 10 лет
+            timeInterval: "1960-01-01/2030-01-01"
+        },
+        timeDimensionControl: true,
+        timeDimensionControlOptions: {
+            backwardButton: true,
+            forwardButton: true,
+            playButton: true,
+            position: 'bottomleft'
+        }
+    });
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
+
+    // Данные: Каждому слою — СВОЯ надпись и СВОЙ год
+    var aralData = {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "properties": {
+                    "time": "1960-01-01T00:00:00Z",
+                    "popup": "<b>1960 год: Исходное состояние</b><br>Площадь: 68,000 км². Данные NASA.",
+                    "style": {"color": "#0000FF", "fillOpacity": 0.4}
                 },
-                {
-                    "type": "Feature",
-                    "properties": {"time": "2030-01-01", "popup": "<b>2030: ПРОГНОЗ ARAL-HUB</b><br>Целевой контур ИИ-управления.", "style": {"color": "gold", "dashArray": "5,5"}},
-                    "geometry": {"type": "Polygon", "coordinates": [[[59.5,45.5], [62,45.5], [62,47.2], [59.5,47.2], [59.5,45.5]]]}
-                }
-            ]
-        };
+                "geometry": {"type": "Polygon", "coordinates": [[[58.2, 43.5], [62.0, 43.5], [62.0, 47.0], [58.2, 47.0], [58.2, 43.5]]]}
+            },
+            {
+                "type": "Feature",
+                "properties": {
+                    "time": "2005-01-01T00:00:00Z",
+                    "popup": "<b>2005 год: Период разделения</b><br>Малый Арал отделен Кокаральской плотиной.",
+                    "style": {"color": "#87CEEB", "fillOpacity": 0.5}
+                },
+                "geometry": {"type": "Polygon", "coordinates": [[[60.5, 46.0], [61.8, 46.0], [61.8, 46.8], [60.5, 46.8], [60.5, 46.0]]]}
+            },
+            {
+                "type": "Feature",
+                "properties": {
+                    "time": "2030-01-01T00:00:00Z",
+                    "popup": "<b>2030 год: ПРОГНОЗ ARAL-HUB</b><br>Целевой контур при внедрении ИИ-управления.",
+                    "style": {"color": "#FFD700", "weight": 4, "dashArray": "5, 10", "fillOpacity": 0.3}
+                },
+                "geometry": {"type": "Polygon", "coordinates": [[[59.8, 45.8], [61.8, 45.8], [62.2, 46.5], [61.8, 47.2], [59.8, 47.2], [59.8, 45.8]]]}
+            }
+        ]
+    };
 
-        L.timeDimension.layer.geoJson(L.geoJson(data, {
-            style: function(f){ return f.properties.style; },
-            onEachFeature: function(f, l){ l.bindPopup(f.properties.popup); }
-        }), {updateTimeDimension: true}).addTo(map);
-    </script>
+    // Добавляем слои на карту так, чтобы они менялись во времени
+    var geoJsonLayer = L.geoJson(aralData, {
+        style: function(feature) { return feature.properties.style; },
+        onEachFeature: function(feature, layer) {
+            layer.bindPopup(feature.properties.popup);
+        }
+    });
+
+    var timeLayer = L.timeDimension.layer.geoJson(geoJsonLayer, {
+        updateTimeDimension: true,
+        duration: "P10Y",
+        updateTimeDimensionMode: 'replace'
+    });
+
+    timeLayer.addTo(map);
+
+</script>
 </body>
 </html>
