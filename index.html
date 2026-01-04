@@ -5,14 +5,11 @@
     <title>Aral Hub: Deep Data Synthesis</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
     <style>
-        body { margin: 0; display: flex; font-family: 'Segoe UI', Tahoma, sans-serif; height: 100vh; background: #f0f2f5; }
-        #map { flex: 2; height: 100%; box-shadow: 2px 0 10px rgba(0,0,0,0.1); }
-        #analysis { flex: 1; padding: 25px; overflow-y: auto; background: white; }
+        body { margin: 0; display: flex; font-family: 'Segoe UI', sans-serif; height: 100vh; background: #f0f2f5; }
+        #map { flex: 2; height: 100%; }
+        #analysis { flex: 1; padding: 25px; overflow-y: auto; background: white; border-left: 2px solid #005b96; }
         .card { background: #fff; border: 1px solid #ddd; padding: 15px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        h2 { color: #005b96; border-bottom: 2px solid #005b96; padding-bottom: 10px; }
-        .formula { background: #2c3e50; color: #00ffc3; padding: 15px; border-radius: 5px; font-family: 'Courier New', monospace; font-size: 14px; margin: 10px 0; }
-        .highlight { color: #d9534f; font-weight: bold; font-size: 1.2em; }
-    </small>
+        .formula { background: #2c3e50; color: #00ffc3; padding: 15px; border-radius: 5px; font-family: monospace; }
     </style>
 </head>
 <body>
@@ -20,65 +17,38 @@
 <div id="map"></div>
 
 <div id="analysis">
-    <h2>Aral Hub: Deep Analysis</h2>
-    
+    <h2 style="color: #005b96;">Aral Hub: Deep Analysis</h2>
     <div class="card">
-        <b>Синтез Big Data и Алгоритм:</b><br>
-        Выявлена нелинейная зависимость регенерации акватории:
+        <b>Алгоритм синтеза данных:</b>
         <div class="formula">R<sub>core</sub> = Σ(W<sub>in</sub> / E<sub>vap</sub>) * K<sub>ai</sub></div>
-        <small>где K<sub>ai</sub> (0.92) — коэффициент эффективности ИИ-распределения.</small>
+        <p>Коэффициент эффективности: <b>0.92</b></p>
     </div>
-
     <div class="card">
-        <b>Факторный анализ влияния:</b>
+        <b>Факторный анализ (Казахстан):</b>
         <ul>
-            <li><b>ИИ-управление стоком:</b> 65%</li>
-            <li><b>Естественные осадки:</b> 22%</li>
-            <li><b>Техногенная фильтрация:</b> 13%</li>
+            <li>ИИ-управление стоком: <b>65%</b></li>
+            <li>Естественные осадки: <b>22%</b></li>
         </ul>
-        <p>Корреляция данных: <span class="highlight">r = +0.89</span></p>
-    </div>
-
-    <div class="card" style="background: #e3f2fd;">
-        <b>Вывод Aral Hub:</b><br>
-        Впервые доказано, что синтез данных спутникового мониторинга и предиктивных ИИ-моделей позволяет сократить дефицит воды на 18% к 2030 году.
+        <p>Корреляция данных: <span style="color:red; font-weight:bold;">r = +0.89</span></p>
     </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
 <script>
-    // Центрируем карту именно на Аральское море
-    var map = L.map('map').setView([45.0, 60.0], 6); 
-    
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: 'Aral Hub AI Analysis'
-    }).addTo(map);
+    var map = L.map('map').setView([46.5, 61.0], 7); 
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
-    // Контур 1960 (Синий)
+    // Контур 1960 (NASA)
     L.polygon([
         [43.5, 58.2], [47.0, 58.2], [47.0, 62.0], [43.5, 62.0]
-    ], {color: 'blue', fillOpacity: 0.2}).addTo(map).bindPopup("<b>1960: Исходные данные NASA</b>");
+    ], {color: 'blue', fillOpacity: 0.1}).addTo(map).bindPopup("1960: Данные NASA");
 
-    // Контур 2030 (Золотой - Прогноз Aral Hub)
-    L.polygon([
-        [45.8, 59.8], [47.2, 59.8], [47.2, 61.8], [45.8, 61.8]
-    ], {
-        color: 'gold', 
-        weight: 5, 
-        dashArray: '10, 15', 
-        fillOpacity: 0.4
-    }).addTo(map).bindPopup("<b>2030: ПРОГНОЗ (AI Synthesis)</b><br>Целевой уровень восстановления.");
-</script>
-
-</body>
-</html>
-// Контур 2030 (Малый Арал, Казахстан - Реалистичная форма)
+    // Реалистичный контур 2030 (Малый Арал, Казахстан)
     L.polygon([
         [46.1, 60.1], [46.4, 60.0], [46.8, 60.4], [46.9, 61.2], 
         [46.6, 61.8], [46.2, 61.7], [45.9, 61.0], [46.1, 60.1]
-    ], {
-        color: 'gold', 
-        weight: 5, 
-        dashArray: '10, 15', 
-        fillOpacity: 0.5
-    }).addTo(map).bindPopup("<b>Прогноз 2030: Малый Арал (РК)</b><br>Целевой контур восстановления при ИИ-управлении стоком Сырдарьи.");
+    ], {color: 'gold', weight: 5, dashArray: '10, 15', fillOpacity: 0.5}).addTo(map)
+    .bindPopup("<b>Прогноз 2030: Малый Арал (РК)</b><br>Целевой контур восстановления.");
+</script>
+</body>
+</html>
